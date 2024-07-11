@@ -1,0 +1,29 @@
+{
+  "name": "go-study-week2",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "app",
+  "runServices": ["app", "database", "rabbitmq"],
+  "workspaceFolder": "/workspace",
+  "postCreateCommand": "scripts/setup.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "editorconfig.editorconfig",
+        "esbenp.prettier-vscode",
+        "golang.go",
+        "ms-azuretools.vscode-docker",
+        "prisma.prisma"
+      ],
+      "settings": {
+        "extensions.verifySignature": false
+      }
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers-contrib/features/pnpm:2": {},
+    "ghcr.io/devcontainers/features/go:1": {}
+  },
+  // Connect as non-root user (https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user)
+  "remoteUser": "node"
+}

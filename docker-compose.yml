@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  app:
+    profiles: ['devcontainer']
+    container_name: go-study-week2-dev
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - .:/workspace:cached
+    depends_on:
+      - rabbitmq
+      - database
+    stdin_open: true
+    tty: true
+    env_file: .env.development
+    environment:
+      DEVCONTAINER: 1
+    network_mode: host
+
+  database:
+    container_name: go-study-week2-database
+    image: postgres:16-alpine
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: skkuding
+    volumes:
+      - go-study-week2-database:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: go-study-week2-rabbitmq
+    ports:
+      - 15672:15672
+      - 5672:5672
+    env_file: .env.development
+    environment:
+      RABBITMQ_ERLANG_COOKIE: RabbitMQ-My-Cookies
+    volumes:
+      - go-study-week2-rabbitmq:/var/lib/rabbitmq
+
+volumes:
+  go-study-week2-database:
+  go-study-week2-rabbitmq:
