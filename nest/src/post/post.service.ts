@@ -4,6 +4,7 @@ import type { CreatePostDTO } from './dto/create-post.dto'
 import type { PostMessage } from './interfaces/post-message.interface'
 import type { PrismaService } from 'src/prisma/prisma.service'
 import type { Post } from '@prisma/client'
+import type { ProcessedPostDTO } from './dto/processed-post.dto'
 
 @Injectable()
 export class PostService {
@@ -36,6 +37,21 @@ export class PostService {
       return await this.producer.publishPostMessage(message)
     } catch (error) {
       console.log(error)
+      throw new InternalServerErrorException(error)
+    }
+  }
+
+  async updatePostResult(postDTO: ProcessedPostDTO): Promise<Post> {
+    try {
+      return await this.prismaService.post.update({
+        where: {
+          id: postDTO.id
+        },
+        data: {
+          status: postDTO.status
+        }
+      })
+    } catch (error) {
       throw new InternalServerErrorException(error)
     }
   }
