@@ -1,4 +1,4 @@
-import { Nack, type AmqpConnection } from '@golevelup/nestjs-rabbitmq'
+import { Nack, AmqpConnection } from '@golevelup/nestjs-rabbitmq'
 import {
   Injectable,
   InternalServerErrorException,
@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common'
 import { ProcessedPostDTO } from './dto/processed-post.dto'
 import { PostStatus } from '@prisma/client'
-import type { PostService } from './post.service'
+import { PostService } from './post.service'
 import { plainToInstance } from 'class-transformer'
 import { validateOrReject } from 'class-validator'
 
@@ -52,6 +52,7 @@ export class PostConsumerService implements OnModuleInit {
 
   async transformRabbitMQResponse(msg: object): Promise<ProcessedPostDTO> {
     try {
+      console.log(msg)
       const postDTO = plainToInstance(ProcessedPostDTO, msg)
       await validateOrReject(postDTO)
       return postDTO

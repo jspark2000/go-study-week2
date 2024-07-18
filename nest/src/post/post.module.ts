@@ -4,6 +4,7 @@ import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq'
 import { PostProducerService } from './post.producer.service'
 import { PostService } from './post.service'
 import { PostConsumerService } from './post.consumer.service'
+import { PostController } from './post.controller'
 
 @Module({
   imports: [
@@ -38,9 +39,11 @@ import { PostConsumerService } from './post.consumer.service'
           channels,
           connectionInitOptions: { wait: false }
         }
-      }
+      },
+      inject: [ConfigService]
     })
   ],
-  providers: [PostService, PostProducerService, PostConsumerService]
+  providers: [PostService, PostProducerService, PostConsumerService],
+  controllers: [PostController]
 })
 export class PostModule {}

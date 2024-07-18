@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common'
 import type { PostMessage } from './interfaces/post-message.interface'
-import type { AmqpConnection } from '@golevelup/nestjs-rabbitmq'
+import { AmqpConnection } from '@golevelup/nestjs-rabbitmq'
 
 @Injectable()
 export class PostProducerService {

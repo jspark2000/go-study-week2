@@ -10,7 +10,6 @@ import (
 	"github.com/jspark2000/go-study-week2/go/rabbitmq"
 )
 
-var producer rabbitmq.Producer
 var consumer rabbitmq.Consumer
 
 func main() {
@@ -57,20 +56,20 @@ func main() {
 		for d := range messages {
 			d.Ack(false)
 
-			var post post.ConsumedPost
+			var message post.ConsumedPost
 
-			err := json.Unmarshal([]byte(d.Body), &post)
+			err := json.Unmarshal([]byte(d.Body), &message)
 
 			if err != nil {
 				log.Fatal(err)
 			}
 
-			fmt.Println(post)
+			fmt.Println(message)
 
-			// result := post.ProcessPost(post)
+			// result := post.ProcessPost(message)
 			// ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 
-			// message, err := json.Marshal(result)
+			// newMessage, err := json.Marshal(result)
 
 			// if err != nil {
 			// 	log.Fatal(err)
@@ -78,7 +77,7 @@ func main() {
 
 			// defer cancel()
 
-			// err = producer.Publish(message, ctx)
+			// err = producer.Publish(newMessage, ctx)
 
 			// if err != nil {
 			// 	log.Printf("Failed to publish new message: %s", err)
