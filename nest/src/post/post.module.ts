@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common'
-import { ConfigModule, type ConfigService } from '@nestjs/config'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq'
 import { PostProducerService } from './post.producer.service'
 import { PostService } from './post.service'
@@ -7,6 +7,7 @@ import { PostConsumerService } from './post.consumer.service'
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     RabbitMQModule.forRootAsync(RabbitMQModule, {
       imports: [ConfigModule],
       useFactory: (config: ConfigService) => {

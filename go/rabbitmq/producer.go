@@ -75,7 +75,6 @@ func (p *producer) confirmHandler(confirms chan amqp.Confirmation) {
 			fmt.Println("confirmHandler is stopping")
 			return
 		case publishSeqNo := <-p.publishes:
-			// log.Printf("waiting for confirmation of %d", publishSeqNo)
 			m[publishSeqNo] = false
 		case confirmed := <-confirms:
 			if confirmed.DeliveryTag > 0 {

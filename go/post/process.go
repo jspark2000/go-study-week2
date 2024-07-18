@@ -1,8 +1,7 @@
 package post
 
-import "fmt"
+// TODO
+// ProcessPost 함수 구현
+// func ProcessPost(post ConsumedPost) ProducedPost {
 
-func ProcessPost(body []byte) []byte {
-	processedMessage := fmt.Sprintf("Processed: %s", body)
-	return []byte(processedMessage)
-}
+// }

@@ -1,10 +1,10 @@
 package main
 
 import (
-	"context"
+	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/jspark2000/go-study-week2/go/post"
 	"github.com/jspark2000/go-study-week2/go/rabbitmq"
@@ -15,21 +15,20 @@ var consumer rabbitmq.Consumer
 
 func main() {
 	producerConfig := rabbitmq.ProducerConfig{
-		AmqpURI:        "amqp://skkuding:1234@localhost:5672/",
+		AmqpURI:        "amqp://skkuding:1234@localhost:5672/vh",
 		ConnectionName: "ProducerConnection",
 		ExchangeName:   "post.exchange",
 		RoutingKey:     "post.result",
 	}
 
 	consumerConfig := rabbitmq.ConsumerConfig{
-		AmqpURI:        "amqp://skkuding:1234@localhost:5672/",
+		AmqpURI:        "amqp://skkuding:1234@localhost:5672/vh",
 		ConnectionName: "ConsumerConnection",
 		QueueName:      "post.q.submission",
 		Ctag:           "post_consumer",
 	}
 
-	var err error
-	producer, err = rabbitmq.NewProducer(producerConfig)
+	producer, err := rabbitmq.NewProducer(producerConfig)
 	if err != nil {
 		log.Fatalf("Failed to create producer: %s", err)
 	}
@@ -56,19 +55,34 @@ func main() {
 
 	go func() {
 		for d := range messages {
-			log.Printf("Received a message: %s", d.Body)
 			d.Ack(false)
 
-			newMessage := post.ProcessPost(d.Body)
-			ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+			var post post.ConsumedPost
 
-			defer cancel()
-
-			err := producer.Publish(newMessage, ctx)
+			err := json.Unmarshal([]byte(d.Body), &post)
 
 			if err != nil {
-				log.Printf("Failed to publish new message: %s", err)
+				log.Fatal(err)
 			}
+
+			fmt.Println(post)
+
+			// result := post.ProcessPost(post)
+			// ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+
+			// message, err := json.Marshal(result)
+
+			// if err != nil {
+			// 	log.Fatal(err)
+			// }
+
+			// defer cancel()
+
+			// err = producer.Publish(message, ctx)
+
+			// if err != nil {
+			// 	log.Printf("Failed to publish new message: %s", err)
+			// }
 		}
 	}()
 
