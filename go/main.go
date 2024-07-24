@@ -1,10 +1,12 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/jspark2000/go-study-week2/go/post"
 	"github.com/jspark2000/go-study-week2/go/rabbitmq"
@@ -66,22 +68,22 @@ func main() {
 
 			fmt.Println(message)
 
-			// result := post.ProcessPost(message)
-			// ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+			result := post.ProcessPost(message)
+			ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 
-			// newMessage, err := json.Marshal(result)
+			newMessage, err := json.Marshal(result)
 
-			// if err != nil {
-			// 	log.Fatal(err)
-			// }
+			if err != nil {
+			log.Fatal(err)
+			}
 
-			// defer cancel()
+			defer cancel()
 
-			// err = producer.Publish(newMessage, ctx)
+			err = producer.Publish(newMessage, ctx)
 
-			// if err != nil {
-			// 	log.Printf("Failed to publish new message: %s", err)
-			// }
+			if err != nil {
+			log.Printf("Failed to publish new message: %s", err)
+			}
 		}
 	}()
 

@@ -44,6 +44,8 @@ export class PostConsumerService implements OnModuleInit {
     try {
       if (postDTO.status === PostStatus.Success) {
         await this.postService.updatePostResult(postDTO)
+      } else if (postDTO.status === PostStatus.Failed) {
+        await this.postService.updatePostResult(postDTO)
       }
     } catch (error) {
       throw new InternalServerErrorException(error)

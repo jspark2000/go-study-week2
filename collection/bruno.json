@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "IRIS Study",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
