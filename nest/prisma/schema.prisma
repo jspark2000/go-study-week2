@@ -13,17 +13,47 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum PostStatus {
-  Processing
-  Success
-  Failed
+enum JudgeResult {
+  Judging
+  Accepted
+  NotAnswer
+  Error
 }
 
-model Post {
-  id         Int        @id @default(autoincrement())
-  title      String     @db.VarChar(200)
-  content    String     @db.Text
-  status     PostStatus @default(Processing)
+model Submission {
+  id             Int              @id @default(autoincrement())
+  problemId      Int              @map("problem_id")
+  code           String           @db.Text
+  createTime     DateTime         @default(now()) @map("create_time")
+  result         JudgeResult      @default(Judging)
+  Problem        Problem          @relation(fields: [problemId], references: [id])
+  TestcaseResult TestcaseResult[]
+}
+
+model TestcaseResult {
+  submissionId Int         @map("testcase_result")
+  testcaseId   Int         @map("testcase_id")
+  result       JudgeResult @default(Judging)
+
+  submission Submission @relation(fields: [submissionId], references: [id])
+  testcase   Testcase   @relation(fields: [testcaseId], references: [id])
   createTime DateTime   @default(now()) @map("create_time")
-  updateTime DateTime   @updatedAt @map("update_time")
+
+  @@unique([submissionId, testcaseId])
+}
+
+model Problem {
+  id          Int          @id @default(autoincrement())
+  content     String       @db.Text
+  submissions Submission[]
+  testcases   Testcase[]
+}
+
+model Testcase {
+  id             Int              @id @default(autoincrement())
+  problemId      Int              @map("problem_id")
+  in             String           @db.VarChar(128)
+  out            String           @db.VarChar(128)
+  Problem        Problem          @relation(fields: [problemId], references: [id])
+  TestcaseResult TestcaseResult[]
 }

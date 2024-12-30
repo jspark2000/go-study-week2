@@ -1,5 +1,6 @@
-import { Controller, Get } from '@nestjs/common'
+import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common'
 import { AppService } from './app.service'
+import type { Problem } from '@prisma/client'
 
 @Controller()
 export class AppController {
@@ -8,5 +9,12 @@ export class AppController {
   @Get()
   getHello(): string {
     return this.appService.getHello()
+  }
+
+  @Get('problem/:id')
+  async getProblem(
+    @Param('id', ParseIntPipe) problemId: number
+  ): Promise<Problem> {
+    return await this.appService.getProblem(problemId)
   }
 }

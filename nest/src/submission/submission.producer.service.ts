@@ -1,21 +1,21 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common'
-import type { PostMessage } from './interfaces/post-message.interface'
 import { AmqpConnection } from '@golevelup/nestjs-rabbitmq'
+import type { JudgeRequestMessage } from './interfaces/judge-message.interface'
 
 @Injectable()
-export class PostProducerService {
+export class SubmissionProducerService {
   constructor(private readonly amqpConnection: AmqpConnection) {}
 
-  async publishPostMessage(message: PostMessage) {
+  async publishJudgeMessage(message: JudgeRequestMessage) {
     try {
       await this.amqpConnection.publish(
-        'post.exchange',
-        'post.submission',
+        'submission.exchange',
+        'judge.request',
         message,
         {
           messageId: String(message.id),
           persistent: true,
-          type: 'post'
+          type: 'judge'
         }
       )
     } catch (error) {

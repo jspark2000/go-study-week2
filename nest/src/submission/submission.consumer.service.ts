@@ -4,17 +4,17 @@ import {
   InternalServerErrorException,
   type OnModuleInit
 } from '@nestjs/common'
-import { ProcessedPostDTO } from './dto/processed-post.dto'
-import { PostStatus } from '@prisma/client'
-import { PostService } from './post.service'
+import { SubmissionService } from './submission.service'
 import { plainToInstance } from 'class-transformer'
 import { validateOrReject } from 'class-validator'
+import { JudgeResult } from '@prisma/client'
+import { JudgeResultDTO } from './dto/submission.dto'
 
 @Injectable()
-export class PostConsumerService implements OnModuleInit {
+export class SubmissionConsumerService implements OnModuleInit {
   constructor(
     private readonly amqpConnection: AmqpConnection,
-    private readonly postService: PostService
+    private readonly submissionService: SubmissionService
   ) {}
 
   onModuleInit() {
@@ -29,33 +29,32 @@ export class PostConsumerService implements OnModuleInit {
         }
       },
       {
-        exchange: 'post.exchange',
-        routingKey: 'post.result',
-        queue: 'post.q.result',
+        exchange: 'submission.exchange',
+        routingKey: 'judge.result',
+        queue: 'judge.q.result',
         queueOptions: {
-          channel: 'post-result-channel'
+          channel: 'judge-result-channel'
         }
       },
       'nest-mq-handler'
     )
   }
 
-  async handleJudgerMessage(postDTO: ProcessedPostDTO): Promise<void> {
+  async handleJudgerMessage(submissionDTO: JudgeResultDTO): Promise<void> {
     try {
-      if (postDTO.status === PostStatus.Success) {
-        await this.postService.updatePostResult(postDTO)
+      if (submissionDTO.result === JudgeResult.Accepted) {
+        await this.submissionService.updateSubmissionResult(submissionDTO)
       }
     } catch (error) {
       throw new InternalServerErrorException(error)
     }
   }
 
-  async transformRabbitMQResponse(msg: object): Promise<ProcessedPostDTO> {
+  async transformRabbitMQResponse(msg: object) {
     try {
-      console.log(msg)
-      const postDTO = plainToInstance(ProcessedPostDTO, msg)
-      await validateOrReject(postDTO)
-      return postDTO
+      const submissionDTO = plainToInstance(JudgeResultDTO, msg)
+      await validateOrReject(submissionDTO)
+      return submissionDTO
     } catch (error) {
       throw new InternalServerErrorException(error)
     }

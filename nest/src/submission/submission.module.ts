@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq'
-import { PostProducerService } from './post.producer.service'
-import { PostService } from './post.service'
-import { PostConsumerService } from './post.consumer.service'
-import { PostController } from './post.controller'
+import { SubmissionService } from './submission.service'
+import { SubmissionProducerService } from './submission.producer.service'
+import { SubmissionConsumerService } from './submission.consumer.service'
 
 @Module({
   imports: [
@@ -43,7 +42,11 @@ import { PostController } from './post.controller'
       inject: [ConfigService]
     })
   ],
-  providers: [PostService, PostProducerService, PostConsumerService],
-  controllers: [PostController]
+  providers: [
+    SubmissionService,
+    SubmissionProducerService,
+    SubmissionConsumerService
+  ],
+  controllers: [SubmissionConsumerService]
 })
-export class PostModule {}
+export class SubmissionModule {}
