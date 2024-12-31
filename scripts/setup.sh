@@ -32,7 +32,7 @@ do
 done
 
 # Install Go dependencies
-cd $BASEDIR/go
+cd $BASEDIR/iris-alpine
 go get
 
 # Check RabbitMQ connection
@@ -41,16 +41,16 @@ echo "rabbitmq is up - server running..."
 
 # Make an Exchange
 rabbitmqadmin -H $RABBITMQ_HOST -u $RABBITMQ_DEFAULT_USER -p $RABBITMQ_DEFAULT_PASS -V $RABBITMQ_DEFAULT_VHOST \
-  declare exchange name=$POST_EXCHANGE_NAME type=direct
+  declare exchange name=$JUDGE_EXCHANGE_NAME type=direct
 
 # Make queues
 rabbitmqadmin -H $RABBITMQ_HOST -u $RABBITMQ_DEFAULT_USER -p $RABBITMQ_DEFAULT_PASS -V $RABBITMQ_DEFAULT_VHOST \
-  declare queue name="$POST_RESULT_QUEUE_NAME" durable=true
+  declare queue name="$JUDGE_RESULT_QUEUE_NAME" durable=true
 rabbitmqadmin -H $RABBITMQ_HOST -u $RABBITMQ_DEFAULT_USER -p $RABBITMQ_DEFAULT_PASS -V $RABBITMQ_DEFAULT_VHOST \
-  declare queue name="$POST_SUBMISSION_QUEUE_NAME" durable=true
+  declare queue name="$JUDGE_SUBMISSION_QUEUE_NAME" durable=true
 
 # Make bindings
 rabbitmqadmin -H $RABBITMQ_HOST -u $RABBITMQ_DEFAULT_USER -p $RABBITMQ_DEFAULT_PASS -V $RABBITMQ_DEFAULT_VHOST \
-  declare binding source="$POST_EXCHANGE_NAME" destination_type=queue destination="$POST_RESULT_QUEUE_NAME" routing_key="$POST_RESULT_ROUTING_KEY"
+  declare binding source="$JUDGE_EXCHANGE_NAME" destination_type=queue destination="$JUDGE_RESULT_QUEUE_NAME" routing_key="$JUDGE_RESULT_ROUTING_KEY"
 rabbitmqadmin -H $RABBITMQ_HOST -u $RABBITMQ_DEFAULT_USER -p $RABBITMQ_DEFAULT_PASS -V $RABBITMQ_DEFAULT_VHOST \
-  declare binding source="$POST_EXCHANGE_NAME" destination_type=queue destination="$POST_SUBMISSION_QUEUE_NAME" routing_key="$POST_SUBMISSION_ROUTING_KEY"
+  declare binding source="$JUDGE_EXCHANGE_NAME" destination_type=queue destination="$JUDGE_SUBMISSION_QUEUE_NAME" routing_key="$JUDGE_SUBMISSION_ROUTING_KEY"

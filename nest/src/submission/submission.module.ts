@@ -4,6 +4,7 @@ import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq'
 import { SubmissionService } from './submission.service'
 import { SubmissionProducerService } from './submission.producer.service'
 import { SubmissionConsumerService } from './submission.consumer.service'
+import { SubmissionController } from './submission.controller'
 
 @Module({
   imports: [
@@ -12,11 +13,11 @@ import { SubmissionConsumerService } from './submission.consumer.service'
       imports: [ConfigModule],
       useFactory: (config: ConfigService) => {
         const channels = {
-          'post-channel': {
+          'judge-request-channel': {
             prefetchCount: 1,
             default: true
           },
-          'post-result-channel': {
+          'judge-result-channel': {
             prefetchCount: 1
           }
         }
@@ -47,6 +48,6 @@ import { SubmissionConsumerService } from './submission.consumer.service'
     SubmissionProducerService,
     SubmissionConsumerService
   ],
-  controllers: [SubmissionConsumerService]
+  controllers: [SubmissionController]
 })
 export class SubmissionModule {}

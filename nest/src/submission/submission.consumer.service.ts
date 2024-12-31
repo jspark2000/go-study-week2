@@ -8,7 +8,7 @@ import { SubmissionService } from './submission.service'
 import { plainToInstance } from 'class-transformer'
 import { validateOrReject } from 'class-validator'
 import { JudgeResult } from '@prisma/client'
-import { JudgeResultDTO } from './dto/submission.dto'
+import { JudgeResultMessage, type JudgeResultDTO } from './dto/submission.dto'
 
 @Injectable()
 export class SubmissionConsumerService implements OnModuleInit {
@@ -42,21 +42,37 @@ export class SubmissionConsumerService implements OnModuleInit {
 
   async handleJudgerMessage(submissionDTO: JudgeResultDTO): Promise<void> {
     try {
-      if (submissionDTO.result === JudgeResult.Accepted) {
-        await this.submissionService.updateSubmissionResult(submissionDTO)
-      }
+      await this.submissionService.updateSubmissionResult(submissionDTO)
     } catch (error) {
       throw new InternalServerErrorException(error)
     }
   }
 
-  async transformRabbitMQResponse(msg: object) {
+  async transformRabbitMQResponse(msg: object): Promise<JudgeResultDTO> {
     try {
-      const submissionDTO = plainToInstance(JudgeResultDTO, msg)
-      await validateOrReject(submissionDTO)
-      return submissionDTO
+      const resultMsg = plainToInstance(JudgeResultMessage, msg)
+      await validateOrReject(resultMsg)
+
+      return {
+        ...resultMsg,
+        result: this.parseJudgeResult(resultMsg)
+      }
     } catch (error) {
-      throw new InternalServerErrorException(error)
+      console.log(error)
+      throw new InternalServerErrorException('채점 결과 메세지 형식 오류')
+    }
+  }
+
+  private parseJudgeResult(msg: JudgeResultMessage): JudgeResult {
+    switch (msg.result) {
+      case 0:
+        return JudgeResult.Accepted
+      case 1:
+        return JudgeResult.NotAnswer
+      case 2:
+      case 3:
+      default:
+        return JudgeResult.Error
     }
   }
 }

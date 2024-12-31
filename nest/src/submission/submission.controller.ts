@@ -7,8 +7,8 @@ import {
   ParseIntPipe,
   Post
 } from '@nestjs/common'
-import type { SubmissionService } from './submission.service'
-import type { SubmissionDTO } from './dto/submission.dto'
+import { SubmissionService } from './submission.service'
+import { SubmissionDTO } from './dto/submission.dto'
 
 @Controller('submissions')
 export class SubmissionController {

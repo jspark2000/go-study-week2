@@ -10,7 +10,7 @@ export class SubmissionProducerService {
     try {
       await this.amqpConnection.publish(
         'submission.exchange',
-        'judge.request',
+        'judge.submission',
         message,
         {
           messageId: String(message.id),

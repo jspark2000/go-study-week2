@@ -3,10 +3,14 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { ConfigModule } from '@nestjs/config'
 import { PrismaModule } from './prisma/prisma.module'
-import { PostModule } from './post/post.module'
+import { SubmissionModule } from './submission/submission.module'
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), PrismaModule, PostModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    PrismaModule,
+    SubmissionModule
+  ],
   controllers: [AppController],
   providers: [AppService]
 })

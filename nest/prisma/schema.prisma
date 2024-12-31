@@ -28,6 +28,8 @@ model Submission {
   result         JudgeResult      @default(Judging)
   Problem        Problem          @relation(fields: [problemId], references: [id])
   TestcaseResult TestcaseResult[]
+
+  @@map("submission")
 }
 
 model TestcaseResult {
@@ -40,6 +42,7 @@ model TestcaseResult {
   createTime DateTime   @default(now()) @map("create_time")
 
   @@unique([submissionId, testcaseId])
+  @@map("testcase_result")
 }
 
 model Problem {
@@ -47,13 +50,17 @@ model Problem {
   content     String       @db.Text
   submissions Submission[]
   testcases   Testcase[]
+
+  @@map("problem")
 }
 
 model Testcase {
   id             Int              @id @default(autoincrement())
   problemId      Int              @map("problem_id")
-  in             String           @db.VarChar(128)
-  out            String           @db.VarChar(128)
+  input          String           @db.VarChar(128)
+  output         String           @db.VarChar(128)
   Problem        Problem          @relation(fields: [problemId], references: [id])
   TestcaseResult TestcaseResult[]
+
+  @@map("testcase")
 }

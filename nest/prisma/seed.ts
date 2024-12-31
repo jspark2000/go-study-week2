@@ -16,53 +16,53 @@ async function main() {
 
   const testcases: Prisma.TestcaseCreateManyInput[] = [
     {
-      in: '1',
-      out: '1',
+      input: '1',
+      output: '1',
       problemId: response.id
     },
     {
-      in: '2',
-      out: '4',
+      input: '2',
+      output: '4',
       problemId: response.id
     },
     {
-      in: '3',
-      out: '9',
+      input: '3',
+      output: '9',
       problemId: response.id
     },
     {
-      in: '4',
-      out: '16',
+      input: '4',
+      output: '16',
       problemId: response.id
     },
     {
-      in: '5',
-      out: '25',
+      input: '5',
+      output: '25',
       problemId: response.id
     },
     {
-      in: '6',
-      out: '36',
+      input: '6',
+      output: '36',
       problemId: response.id
     },
     {
-      in: '7',
-      out: '49',
+      input: '7',
+      output: '49',
       problemId: response.id
     },
     {
-      in: '8',
-      out: '64',
+      input: '8',
+      output: '64',
       problemId: response.id
     },
     {
-      in: '9',
-      out: '81',
+      input: '9',
+      output: '81',
       problemId: response.id
     },
     {
-      in: '11',
-      out: '121',
+      input: '11',
+      output: '121',
       problemId: response.id
     }
   ]

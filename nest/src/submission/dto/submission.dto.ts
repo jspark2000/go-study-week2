@@ -11,6 +11,20 @@ export class SubmissionDTO {
   problemId: number
 }
 
+export class JudgeResultMessage {
+  @IsNumber()
+  @IsNotEmpty()
+  submissionId: number
+
+  @IsNumber()
+  @IsNotEmpty()
+  testcaseId: number
+
+  @IsNumber()
+  @IsNotEmpty()
+  result: number
+}
+
 export class JudgeResultDTO {
   @IsNumber()
   @IsNotEmpty()

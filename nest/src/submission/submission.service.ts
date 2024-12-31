@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
-import type { SubmissionProducerService } from './submission.producer.service'
+import { SubmissionProducerService } from './submission.producer.service'
 import type { JudgeResultDTO, SubmissionDTO } from './dto/submission.dto'
 import type { JudgeRequestMessage } from './interfaces/judge-message.interface'
 import { JudgeResult } from '@prisma/client'
