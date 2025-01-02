@@ -51,6 +51,9 @@ func (b *BasicJudger) Judge(code string, testcases []loader.Element, judgeChan c
 		if err := os.Remove(outputFileName); err != nil {
 			log.Printf("실행 파일 삭제 실패: %v", err)
 		}
+
+		// 채널을 닫아 모든 테스트 케이스 채점이 끝났다는 것을 router에게 알림
+		close(judgeChan)
 	}()
 
 	// gcc로 컴파일

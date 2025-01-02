@@ -46,6 +46,29 @@ export class SubmissionService {
 
   async updateSubmissionResult(submissionDTO: JudgeResultDTO): Promise<void> {
     try {
+      if (
+        submissionDTO.result === JudgeResult.Error ||
+        submissionDTO.testcaseId === 0
+      ) {
+        await this.prismaService.testcaseResult.updateMany({
+          where: {
+            submissionId: submissionDTO.submissionId
+          },
+          data: {
+            result: submissionDTO.result
+          }
+        })
+        await this.prismaService.submission.update({
+          where: {
+            id: submissionDTO.submissionId
+          },
+          data: {
+            result: submissionDTO.result
+          }
+        })
+        return
+      }
+
       await this.prismaService.testcaseResult.update({
         where: {
           submissionId_testcaseId: {
